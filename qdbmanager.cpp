@@ -1,4 +1,4 @@
-#include "QDBManager.h"
+#include "qdbmanager.h"
 
 #include <QDir>
 #include <QVariant>
@@ -29,7 +29,7 @@ QList<QString> QDBManager::getListOfTables()
 
     QSqlQuery result = db.exec(list_of_tables_query());
     while(result.next()) {
-        QString tableName = result.value(0).toString().replace("\"","");
+        QString tableName = result.value(0).toString();
         if(!listOfTables.contains(tableName))
             listOfTables << tableName;
     }
@@ -57,7 +57,7 @@ BaseEntity* QDBManager::findById(QString table, QString entityName, int id)
     if (!db.isOpen()) {
         bool openResult = openDB();
         if(!openResult) {
-            return false;
+            return NULL;
         }
         alreadyOpenedDB = false;
     }

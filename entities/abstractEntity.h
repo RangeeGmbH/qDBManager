@@ -27,7 +27,7 @@ public:
     explicit AbstractEntity(QObject* parent = 0);
     virtual bool equals(QObject* elem) = 0;
 
-private:
+protected:
     QVariantMap propertyMap;
 };
 Q_DECLARE_METATYPE(AbstractEntity*)

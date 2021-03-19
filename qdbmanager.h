@@ -10,9 +10,9 @@
 #include <QSqlQuery>
 #include <QString>
 
-#include "entities/baseEntity.h"
-#include "criteriabuilder.h"
-#include "entityfactory.h"
+#include <entities/baseEntity.h>
+#include <criteriabuilder.h>
+#include <entityfactory.h>
 
 #ifndef CONTEXT_NAME
 #define CONTEXT_NAME "default"
@@ -176,7 +176,7 @@ public:
     static void register_entity() { Register<T, BaseEntity>(T::staticMetaObject.className()); }
 
     template<typename T>
-    static void register_entity(QString entityName) { Register<T, BaseEntity>(entityName); }
+    static void register_entity(QString entityName) { (Register<T, BaseEntity>(entityName)); }
 
     template<typename T>
     bool createTable() { return createTable(T::staticMetaObject); }
@@ -204,7 +204,7 @@ public:
     template<typename T>
     QList<T*> find(QStringList criteria, QString orderBy="", bool desc=false) {
         int idx = T::staticMetaObject.indexOfClassInfo(TABLENAME_INFO);
-        QString table = T::staticMetaObject.classInfo(idx).value();
+        QString table = QString(T::staticMetaObject.classInfo(idx).value()).replace("\"","");
         QList<T*> list;
         QEntityList outList = find(table, T::staticMetaObject.className(), criteria, orderBy, desc);
         foreach (BaseEntity* entity, outList) {
@@ -245,14 +245,14 @@ public:
     template<typename T>
     T* findById(int id) {
         int idx = T::staticMetaObject.indexOfClassInfo(TABLENAME_INFO);
-        QString table = T::staticMetaObject.classInfo(idx).value();
+        QString table = QString(T::staticMetaObject.classInfo(idx).value()).replace("\"","");
         return qobject_cast<T*>(findById(table, T::staticMetaObject.className(), id));
     }
 
     template<typename T>
     QList<T*> listAll(QString orderBy="", bool desc=false) {
         int idx = T::staticMetaObject.indexOfClassInfo(TABLENAME_INFO);
-        QString table = T::staticMetaObject.classInfo(idx).value();
+        QString table = QString(T::staticMetaObject.classInfo(idx).value()).replace("\"","");
         QList<T*> list;
         QList<BaseEntity*> baseList = internal_listAll(table, T::staticMetaObject.className(), orderBy, desc);
         foreach (BaseEntity* entity, baseList) {
@@ -264,50 +264,50 @@ public:
     template<typename T>
     int insert(BaseEntity* entity) {
         int idx = entity->metaObject()->indexOfClassInfo(TABLENAME_INFO);
-        QString table = entity->metaObject()->classInfo(idx).value();
+        QString table = QString(T::staticMetaObject.classInfo(idx).value()).replace("\"","");
         return insert(table, entity->metaObject()->className(), entity, false);
     }
 
     template<typename T>
     int insertOrUpdate(BaseEntity* entity) {
         int idx = entity->metaObject()->indexOfClassInfo(TABLENAME_INFO);
-        QString table = entity->metaObject()->classInfo(idx).value();
+        QString table = QString(T::staticMetaObject.classInfo(idx).value()).replace("\"","");
         return insert(table, entity->metaObject()->className(), entity, true);
     }
 
     template<typename T>
     int remove(BaseEntity* entity) {
         int idx = entity->metaObject()->indexOfClassInfo(TABLENAME_INFO);
-        QString table = entity->metaObject()->classInfo(idx).value();
+        QString table = QString(T::staticMetaObject.classInfo(idx).value()).replace("\"","");
         return remove(table, entity->metaObject()->className(), entity);
     }
 
     template<typename T>
     int exists(BaseEntity* entity) {
         int idx = entity->metaObject()->indexOfClassInfo(TABLENAME_INFO);
-        QString table = entity->metaObject()->classInfo(idx).value();
+        QString table = QString(T::staticMetaObject.classInfo(idx).value()).replace("\"","");
         return existsEqualEntity(table, entity->metaObject()->className(), entity);
     }
 
     template<typename T>
     bool existsId(int id) {
         int idx = T::staticMetaObject.indexOfClassInfo(TABLENAME_INFO);
-        QString table = T::staticMetaObject.classInfo(idx).value();
+        QString table = QString(T::staticMetaObject.classInfo(idx).value()).replace("\"","");
         return qobject_cast<T*>(existsId(table, id));
     }
 
     //questa funzione
     template<typename T>
-    bool existsEqualEntity(int id) {
+    bool existsEqualEntity(BaseEntity* entity) {
         int idx = T::staticMetaObject.indexOfClassInfo(TABLENAME_INFO);
-        QString table = T::staticMetaObject.classInfo(idx).value();
-        return qobject_cast<T*>(existsEqualEntity(table, id));
+        QString table = QString(T::staticMetaObject.classInfo(idx).value()).replace("\"","");
+        return qobject_cast<T*>(this->existsEqualEntity(table, entity->metaObject()->className(), entity));
     }
 
     template<typename T>
     int newId() {
         int idx = T::staticMetaObject.indexOfClassInfo(TABLENAME_INFO);
-        QString table = T::staticMetaObject.classInfo(idx).value();
+        QString table = QString(T::staticMetaObject.classInfo(idx).value()).replace("\"","");
         return newId(table);
     }
 

@@ -1,7 +1,7 @@
 #ifndef QSQLITE_H
 #define QSQLITE_H
 
-#include "../QDBManager.h"
+#include <qdbmanager.h>
 
 
 class qSqlite : public QDBManager

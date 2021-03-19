@@ -1,3 +1,4 @@
+#include <QDir>
 #include "qsqlite.h"
 
 qSqlite::qSqlite(QObject* parent) : QDBManager(parent)
