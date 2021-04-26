@@ -431,13 +431,14 @@ bool QDBManager::createTable(QMetaObject meta)
             QStringList values = foreignKeys.value(name.toUpper()).split(":", QString::SkipEmptyParts);
             foreignKey=QString("REFERENCES %1 %2").arg(values[0]).arg(values[1]);
         }
-
         if(type == "int" || type == "bool" || type == "qlonglong") {
             if(name.toLower() != "id") {
                 listOfProps << QString("%1 INTEGER NULL %2").arg(name.toUpper()).arg(foreignKey).trimmed();
             } else {
                 listOfProps << QString("id INTEGER PRIMARY KEY AUTOINCREMENT");
             }
+        } else if(type == "uint") {
+            listOfProps << QString("%1 UNSIGNED INTEGER NULL %2").arg(name.toUpper()).arg(foreignKey).trimmed();
         } else if(type == "QString") {
             listOfProps << QString("%1 TEXT NULL %2").arg(name.toUpper()).arg(foreignKey).trimmed();
         }
@@ -541,9 +542,11 @@ bool QDBManager::syncEntityTable(QMetaObject meta) {
 
             if(!dbFields.contains(name.toUpper())) {
                 //la colonna non esiste nel DB
-                if(type == "int" || type == "bool" || type == "qlonglong") {
+                if(type == "int" || type == "bool" || type == "qlonglong" || type == "uint") {
                     listOfProps << QString("%1 INTEGER NULL").arg(name.toUpper());
                 } else if(type == "QString") {
+                    listOfProps << QString("%1 TEXT NULL").arg(name.toUpper());
+                } else if(type == "uint") {
                     listOfProps << QString("%1 TEXT NULL").arg(name.toUpper());
                 }
             }
@@ -748,7 +751,7 @@ int QDBManager::update(QString table, BaseEntity *ref)
             if(name == "objectName" || name.startsWith("__") || excludeList.contains(name))
                 continue;
 
-            if(type == "int" || type == "qlonglong") {
+            if(type == "int" || type == "qlonglong" || type == "uint") {
                 QVariant value = meta->property(i).read(ref);
                 listOfPropNames << name;
                 listOfProps << QString("%1").arg(value.toString());
@@ -827,7 +830,7 @@ int QDBManager::insert(QString table, QString entityName, BaseEntity *ref, bool 
             if(name == "objectName" || name.startsWith("__") || excludeList.contains(name))
                 continue;
 
-            if(type == "int" || type == "qlonglong") {
+            if(type == "int" || type == "qlonglong" || type == "uint") {
                 QVariant value = meta->property(i).read(ref);
                 if(name.toLower() == "id") {
                     listOfPropNames << name;
