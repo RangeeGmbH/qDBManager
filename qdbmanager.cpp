@@ -862,6 +862,7 @@ int QDBManager::insert(QString table, QString entityName, BaseEntity *ref, bool 
 
         QSqlQuery result;
         bool ret = result.exec(sql);
+        ref->setId(result.lastInsertId().toLongLong());
         numRowsAffected = result.numRowsAffected();
 
         if(ret && numRowsAffected == 1) ref->resetDirty();
