@@ -139,7 +139,7 @@ public:
 
     bool containsTable(QMetaObject meta) {
         int idx = meta.indexOfClassInfo(TABLENAME_INFO);
-        QString table = meta.classInfo(idx).value();
+        QString table = QString(meta.classInfo(idx).value()).replace("\"","");
         return getListOfTables().contains(table);
     }
 
