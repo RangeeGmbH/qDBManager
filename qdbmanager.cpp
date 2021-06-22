@@ -585,7 +585,7 @@ bool QDBManager::deleteTable(QMetaObject meta)
     }
 
     int tableIndex = meta.indexOfClassInfo(TABLENAME_INFO);
-    QString tableName = meta.classInfo(tableIndex).value();
+    QString tableName = QString(meta.classInfo(tableIndex).value()).replace("\"","");
 
     if(getListOfTables().contains(tableName)) {
         QString sqlTable = QString("DROP TABLE %1").arg(tableName);
