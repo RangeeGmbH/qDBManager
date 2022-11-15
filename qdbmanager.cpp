@@ -404,7 +404,7 @@ bool QDBManager::createTable(QMetaObject meta)
         if(name == EXCLUDE_PROPERTY_INFO) { excludeList<<value; }
         if(name == INCLUDE_INDEX_INFO) { listOfIndexColumns<<value.toUpper(); }
         if(name == FOREIGN_KEY_INFO) {
-            QStringList values = value.split(":", QString::SkipEmptyParts);
+            QStringList values = value.split(":", Qt::SkipEmptyParts);
             values[2].replace("\"","");
             if(values[2] == Q_CASCADE_ALL) values[2] = cascade_all();
             if(values[2] == Q_CASCADE_DEL) values[2] = cascade_del();
@@ -428,7 +428,7 @@ bool QDBManager::createTable(QMetaObject meta)
 
         QString foreignKey = "";
         if(foreignKeys.contains(name.toUpper())) {
-            QStringList values = foreignKeys.value(name.toUpper()).split(":", QString::SkipEmptyParts);
+            QStringList values = foreignKeys.value(name.toUpper()).split(":", Qt::SkipEmptyParts);
             foreignKey=QString("REFERENCES %1 %2").arg(values[0]).arg(values[1]);
         }
         if(type == "int" || type == "bool" || type == "qlonglong") {
