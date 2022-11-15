@@ -73,7 +73,6 @@ protected:
     * PROTECTED METHODS
     ************************************************************************************/
     explicit QDBManager(QObject* parent = 0);
-    explicit QDBManager(const QDBManager &);
 
     virtual QString getSqlDriver() { return m_sqlDriver; }
 
@@ -215,10 +214,10 @@ public:
 
     template<typename T>
     QList<T*> find(QString criteria, QString orderBy="", bool desc=false) {
-        QStringList criterias = criteria.split(",", QString::SkipEmptyParts);
+        QStringList criterias = criteria.split(",", Qt::SkipEmptyParts);
         CriteriaBuilder criteriaBuilder;
         foreach (QString criteria, criterias) {
-            QStringList keyVal = criteria.split("=", QString::SkipEmptyParts);
+            QStringList keyVal = criteria.split("=", Qt::SkipEmptyParts);
             if(keyVal.count() == 2 && !(keyVal[0].isEmpty() || keyVal[1].isEmpty()))
                 criteriaBuilder.insert(keyVal[0].trimmed(),keyVal[1].trimmed());
         }
